@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
+import { useTrail, animated, easings } from "@react-spring/web";
 
 import Work from "./Work";
 import Projects from "./Projects";
@@ -10,90 +10,140 @@ import Something from "./Something";
 import { GRIDS } from "../constants";
 
 export default function BentoGrid({ setCurrentGrid }) {
+  const [nameIdx, setNameIdx] = useState(0);
   const name = "Aditi".split("");
-  const subheading = "Description".split("");
+
+  const [subheadingIdx, setSubheadingIdx] = useState(0);
+  const subheading = "Full-Stack Developer".split("");
+
+  const trails = useTrail(7, {
+    from: { scale: 0 },
+    to: { scale: 1 },
+    leave: { scale: 1 },
+    config: {
+      easing: easings.easeInBack,
+      delay: 300,
+    },
+  });
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (nameIdx < name.length) {
+        setNameIdx(nameIdx + 1);
+      }
+      if (subheadingIdx < subheading.length) {
+        setSubheadingIdx(subheadingIdx + 1);
+      }
+    }, 100);
+
+    return () => {
+      clearInterval(id);
+    };
+  }, [nameIdx, subheadingIdx]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-9 md:grid-rows-9 w-screen md:h-screen p-5 gap-5 bg-stone-200">
+    <animated.div className="grid grid-cols-1 md:grid-cols-9 md:grid-rows-9 w-screen md:h-screen p-5 gap-5 bg-stone-200">
       {/* Work Experience */}
-      <div className="row-start-5 md:row-span-6 md:col-span-3">
+      <animated.div
+        style={trails[1]}
+        className="row-start-5 md:row-span-6 md:col-span-3"
+      >
         <div
           className="relative bg-yellow-200 border border-black h-full w-full"
           onClick={() => setCurrentGrid(GRIDS[2])}
         >
           <Work />
         </div>
-      </div>
+      </animated.div>
 
       {/* Projects */}
-      <div className="md:row-span-3 md:col-span-3">
+      <animated.div
+        style={trails[2]}
+        className="md:row-span-3 md:col-span-3"
+      >
         <div
           onClick={() => setCurrentGrid(GRIDS[1])}
           className="relative h-full w-full bg-green-400 border border-black"
         >
           <Projects />
         </div>
-      </div>
+      </animated.div>
 
-      <div className="md:col-span-3 md:row-span-3">
+      <animated.div
+        style={trails[3]}
+        className="md:col-span-3 md:row-span-3"
+      >
         <div className="relative h-full w-full border border-neutral-900 bg-red-500">
           <Something />
         </div>
-      </div>
+      </animated.div>
 
       {/* Main Header */}
-      <div className="row-start-1 md:col-span-4 md:row-span-3">
+      <animated.div
+        style={trails[0]}
+        className="row-start-1 md:col-span-4 md:row-span-3"
+      >
         <div className="h-full w-full p-10 bg-blue-300 border border-black flex flex-col items-center justify-center gap-3">
           <div className="border bg-blue-950 w-fit px-5 py-3">
             <span className="text-5xl font-bold text-mintGreen" id="home">
-              {name}
-              <span className="inline-block mx-2 w-6 h-1 bg-green-300 "></span>
+              {name.slice(0, nameIdx).join("")}
+              <span className="inline-block mx-2 w-6 h-1 bg-green-300 animate-pulse"></span>
             </span>
           </div>
           <div className="border text-center border-neutral-900 bg-blue-950 w-fit px-5 py-2">
             <span className="md:text-md text-purple-200">
-              {subheading}
-              <span className="inline-block w-3 h-0.5 mx-1 bg-green-300 "></span>
+              {subheading.slice(0, subheadingIdx).join("")}
+              <span className="inline-block w-3 h-0.5 mx-1 bg-green-300 animate-pulse"></span>
             </span>
           </div>
         </div>
-      </div>
+      </animated.div>
 
       {/* Blog */}
-      <div className="md:row-span-4 md:col-span-2">
+      <animated.div
+        style={trails[4]}
+        className="md:row-span-4 md:col-span-2"
+      >
         <div className="h-full w-full relative border border-neutral-900 bg-pink-300">
           <Something />
         </div>
-      </div>
+      </animated.div>
 
       {/* Resume */}
-      <div className="md:row-span-3 md:col-span-2">
+      <animated.div
+        style={trails[5]}
+        className="md:row-span-3 md:col-span-2"
+      >
         <div className="h-full w-full relative border border-neutral-900 bg-purple-300">
-          <a
+        <a
             href="/resume.pdf" // Path to your PDF file
             target="_blank" // Opens the file in a new tab
             rel="noopener noreferrer" // For security reasons
-            className="w-full h-full flex justify-center items-center"
           >
-            <Resume />{" "}
-            {/* This can be your Resume component or a clickable text */}
+              <Resume />
           </a>
         </div>
-      </div>
+      </animated.div>
 
       {/* Contact */}
-      <div className="md:row-span-3 md:col-span-5">
+      <animated.div
+        style={trails[6]}
+        className="md:row-span-3 md:col-span-5"
+      >
         <div className="h-full w-full md:flex justify-between items-center p-10 gap-5 bg-indigo-500 border border-black">
           <Contact />
         </div>
-      </div>
+      </animated.div>
 
       {/* Something */}
-      <div className="md:row-span-2 md:col-span-2">
+      <animated.div
+        style={trails[6]}
+        className="md:row-span-2 md:col-span-2"
+      >
         <div className="h-full w-full relative border border-neutral-900 bg-orange-400">
           <Something />
         </div>
-      </div>
-    </div>
+      </animated.div>
+    </animated.div>
   );
 }
